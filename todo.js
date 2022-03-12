@@ -9,16 +9,24 @@ const form = document.querySelector("#todo-form");
 const addInput = document.querySelector("#todo-add-input");
 const todoList = document.querySelector(".list-group");
 const allDeleteButton = document.querySelector("#clear-todos");
-
+const filter = document.querySelector("#filter");
 // ==============================================
 
+// key events = keyup, keydown, keypress
+
+// Event Listener
 
 function eventListener(){
-  form.addEventListener("submit", addTodo)
+  form.addEventListener("submit", addTodo);
+  cardBodyTwo.addEventListener("click", deleteTodo);
+  allDeleteButton.addEventListener("click", deleteAllTodo);
+  filter.addEventListener("keyup", findTodo )
+
 }
 
 eventListener();
 
+// ============================
 
 // todo submit function  - todo elave etmek
 
@@ -41,13 +49,16 @@ function addTodo(e){
     messageContent("success", "todo todo-liste elave olundu")
    }
    else{
-      messageContent("danger", "zehmet olsada olmasada boslugu doldur")
+      messageContent("warning", "zehmet olsada olmasada boslugu doldur")
    }
 
  
    e.preventDefault();
 }
 
+// =====================
+
+// Todo Progress message - proses mesajlari
 
 function messageContent(type, text){
     const message = document.createElement("div");
@@ -57,8 +68,55 @@ function messageContent(type, text){
     setTimeout(()=>{
         message.remove();
     }, 2000);
-    console.log(message);
+   
 }
+
+
+
+// =================================
+
+// todo delete method
+
+function deleteTodo(e){
+   
+
+   if (e.target.className === "fa fa-remove") {
+      e.target.parentElement.parentElement.remove();
+      messageContent("danger", "todo silindi")
+   }
+}
+
+
+function deleteAllTodo(){
+  //  todoList.innerHTML = ""
+
+  if (confirm("butun todolari silmek isteyirsiniz?")) {
+    while (todoList.firstElementChild !=null) {
+      todoList.firstElementChild.remove();
+      
+    }
+    messageContent("danger", "butun todolar silindi")
+
+  }
+}
+
+function findTodo(e){
+  const filterText = e.target.value.toLowerCase();
+  
+  const listItems = document.querySelectorAll(".list-group-item");
+  listItems.forEach(item => {
+  
+    const text = item.textContent.toLowerCase()
+      if (text.indexOf(filterText) === -1) {
+         item.setAttribute("style", "display : none !important")
+        
+      }
+      else{
+        item.setAttribute("style", "display : flex !important")
+      }
+  });
+}
+
 
 
 
